@@ -13,6 +13,18 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+use App\Models\User;
+use Firebase\JWT\JWT;
+use Illuminate\Http\Request;
+
+$router->post('/login', function (Request $request) use ($router) {
+    $email = $request->json('email');
+    $senha = $request->json('senha');
+
+    $user = User::where('email', $email)->first();
+    if (!password_verify($senha, $user?->password ?? '')) {
+        return response('Usuário ou senha inválidos', 401);
+    }
+
+    return response(JWT::encode(['email' => $user->email], env('JWT_KEY')));
 });
