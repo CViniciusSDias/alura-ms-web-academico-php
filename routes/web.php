@@ -1,6 +1,6 @@
 <?php
 
-/** @var \Laravel\Lumen\Routing\Router $router */
+/** @var Router $router */
 
 /*
 |--------------------------------------------------------------------------
@@ -13,18 +13,13 @@
 |
 */
 
-use App\Models\User;
-use Firebase\JWT\JWT;
-use Illuminate\Http\Request;
+use Laravel\Lumen\Routing\Router;
 
-$router->post('/login', function (Request $request) use ($router) {
-    $email = $request->json('email');
-    $senha = $request->json('senha');
+$router->post('/login', 'LoginController@login');
 
-    $user = User::where('email', $email)->first();
-    if (!password_verify($senha, $user?->password ?? '')) {
-        return response('Usuário ou senha inválidos', 401);
-    }
-
-    return response(JWT::encode(['email' => $user->email], env('JWT_KEY')));
+$router->group(['middleware' => 'auth'], function () use ($router) {
+    $router->get('/cursos', 'CursosController@index');
+    $router->patch('/cursos/{courseId}', 'CursosController@assistir');
+    $router->patch('/cursos/{courseId}', 'CursosController@assistir');
 });
+

@@ -37,7 +37,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($request->hasHeader('Authorization')) {
                 $token = $request->header('Authorization');
                 $token = str_replace('Bearer: ', '', $token);
-                $decoded = JWT::decode($token, env('JWT_KEY'));
+                $decoded = JWT::decode($token, env('JWT_KEY'), ['HS256']);
 
                 return User::where('email', $decoded->email)->first();
             }
