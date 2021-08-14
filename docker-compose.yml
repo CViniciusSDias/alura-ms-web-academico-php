@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  web-academico:
+    build: .
+    environment:
+      JWT_KEY: chave-jwt
+      DB_CONNECTION: pgsql
+      DB_HOST: postgre-academico
+      DB_DATABASE: academico
+      DB_USERNAME: usuario_academico
+      DB_PASSWORD: senhapg
+      APP_KEY: c08cbbfd6eefc83ac6d23c4c791277e4
+      APP_URL: http://web-academico:8080
+      APP_ENV: local
+      APP_DEBUG: "true"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: php -S web-academico:8080 -t public
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgre-academico
+
+  postgre-academico:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: senhapg
+      POSTGRES_USER: usuario_academico
+      POSTGRES_DB: academico
