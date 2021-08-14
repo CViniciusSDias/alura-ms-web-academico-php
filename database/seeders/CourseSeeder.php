@@ -14,6 +14,10 @@ class CourseSeeder extends Seeder
      */
     public function run()
     {
+        if (DB::table('courses')->get()->count() > 0) {
+            return;
+        }
+
         $cursos = [
             [
                 'titulo' => 'Microsserviços: Padrões de projeto',
